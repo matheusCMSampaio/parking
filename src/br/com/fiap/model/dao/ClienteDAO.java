@@ -4,50 +4,34 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import br.com.fiap.model.bean.Cliente;
 
-import br.com.fiap.model.bean.Carro;
-
-public class CarroDAO implements IDAO {
-
+public class ClienteDAO implements IDAO {
 	private Connection con;
-	private Carro carro;
+	private Cliente cliente;
 
-	public CarroDAO(Connection con, Carro carro) {
+	public ClienteDAO(Connection con, Cliente cliente) {
 		this.con = con;
-		this.carro = carro;
-	}
-	
-
-	public CarroDAO(Connection con) {
-		this.con = con;
+		this.cliente = cliente;
 	}
 
+	public ClienteDAO(Connection con) {
+		this.con = con;
+	}
 
 	public Connection getCon() {
 		return con;
 	}
 
-	public void setCon(Connection con) {
-		this.con = con;
-	}
-
-	public Carro getCarro() {
-		return carro;
-	}
-
-	public void setCarro(Carro carro) {
-		this.carro = carro;
-	}
-
 	public String inserir(Object obj) {
-		carro = (Carro) obj;
-		String sql = "insert into carro(placa, cor, descricao) values(?,?,?)";
+		cliente = (Cliente) obj;
+		String sql = "insert into cliente(idcliente, nomeCliente, placa) values(?,?,?)";
 
 		try {
 			PreparedStatement ps = getCon().prepareStatement(sql);
-			ps.setString(1, carro.getPlaca());
-			ps.setString(2, carro.getCor());
-			ps.setString(3, carro.getDescricao());
+			ps.setInt(1, cliente.getIdCliente());
+			ps.setString(2, cliente.getNomeCliente());
+			ps.setString(3, cliente.getPlaca());
 
 			if (ps.executeUpdate() > 0) {
 				return "Inserido com sucesso";
@@ -60,13 +44,13 @@ public class CarroDAO implements IDAO {
 	}
 
 	public String alterar(Object obj) {
-		carro = (Carro) obj;
-		String sql = "update carro set cor = ?, descricao = ? where placa = ?";
+		cliente = (Cliente) obj;
+		String sql = "update cliente set nomeCliente = ?, placa = ? where idCliente = ?";
 		try {
 			PreparedStatement ps = getCon().prepareStatement(sql);
-			ps.setString(3, carro.getPlaca());
-			ps.setString(1, carro.getCor());
-			ps.setString(2, carro.getDescricao());
+			ps.setInt(3, cliente.getIdCliente());
+			ps.setString(1, cliente.getNomeCliente());
+			ps.setString(2, cliente.getPlaca());
 			if (ps.executeUpdate() > 0) {
 				return "Alterado com sucerro";
 			} else {
@@ -79,11 +63,11 @@ public class CarroDAO implements IDAO {
 	}
 
 	public String excluir(Object obj) {
-		carro = (Carro) obj;
-		String sql = "delete from carro where placa = ?";
+		cliente = (Cliente) obj;
+		String sql = "delete from cliente where idcliente = ?";
 		try {
 			PreparedStatement ps = getCon().prepareStatement(sql);
-			ps.setString(1, carro.getPlaca());
+			ps.setInt(1, cliente.getIdCliente());
 			if (ps.executeUpdate() > 0) {
 				return "Excluido com sucesso";
 			} else {
@@ -95,25 +79,26 @@ public class CarroDAO implements IDAO {
 	}
 
 	public String listarTodos() {
-		String sql = "select * from carro";
-		String listaCarro = "Lista dos carros\n\n";
+		String sql = "select * from cliente";
+		String listaCliente = "Lista dos Clientes\n\n";
 		try {
 			PreparedStatement ps = getCon().prepareStatement(sql);
 			ResultSet rs = ps.executeQuery();
-			if(rs != null) {
-				while(rs.next()) {
-					listaCarro+= "Placa:"+ rs.getString(1)+ "\nCor: "+rs.getString(2)+"\nDescricao:"+ rs.getString(3)+ "\n\n";
-					
-					
+			if (rs != null) {
+				while (rs.next()) {
+					listaCliente += "Id:" + rs.getString(1) + "\nNome: " + rs.getString(2) + "\nPlaca:"
+							+ rs.getString(3) + "\n\n";
+
 				}
-				return listaCarro;
-			}else {
+				return listaCliente;
+			} else {
 				return null;
 			}
-			
+
 		} catch (SQLException e) {
 			return null;
 		}
-		
+
 	}
+
 }

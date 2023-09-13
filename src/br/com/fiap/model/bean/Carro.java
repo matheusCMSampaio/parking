@@ -5,6 +5,14 @@ public class Carro {
 	private String cor;
 	private String descricao;
 
+	
+	public Carro(String placa, String cor, String descricao) {
+		this.placa = placa;
+		this.cor = cor;
+		this.descricao = descricao;
+	}
+	public Carro() {}
+
 	public String getPlaca() {
 		return placa;
 	}
